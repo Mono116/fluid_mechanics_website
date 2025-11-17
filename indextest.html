@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Dato Aleatorio</title>
+</head>
+<body>
+    <h1>Seleccionar un dato aleatorio</h1>
+    <button onclick="seleccionarDato()">Seleccionar Dato</button>
+    <p id="resultado">El dato seleccionado aparecerá aquí.</p>
+
+    <script>
+        // Lista de datos
+        const datos = ["Manzana", "Banana", "Naranja", "Pera", "Uva"];
+
+        function seleccionarDato() {
+            // Seleccionar un índice aleatorio
+            const indiceAleatorio = Math.floor(Math.random() * datos.length);
+            const datoSeleccionado = datos[indiceAleatorio];
+
+            // Mostrar el dato en la página
+            document.getElementById("resultado").textContent = `Dato seleccionado: ${datoSeleccionado}`;
+
+            // Guardar el dato en localStorage
+            localStorage.setItem("datoAleatorio", datoSeleccionado);
+        }
+    </script>
+</body>
+</html>

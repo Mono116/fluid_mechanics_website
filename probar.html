@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Probar Alerta</title>
+</head>
+<body>
+    <input type="text" id="caudal_ej1" placeholder="Ingresa el caudal (Q)">
+    <input type="text" id="diametro_1" placeholder="Ingresa diámetro 1">
+    <input type="text" id="diametro_2" placeholder="Ingresa diámetro 2">
+    <input type="text" id="diametro_3" placeholder="Ingresa diámetro 3">
+    <button id="comprobar2">Comprobar 2</button>
+
+    <script>
+        // Variables
+        let Q_ej1, d1_ej1, d2_ej1, d3_ej1;
+
+        // Seleccionar botón
+        const botonComprobar = document.getElementById('comprobar2');
+
+        // Evento del botón
+        botonComprobar.addEventListener('click', function() {
+            console.log('Botón clicado'); // Para depuración
+
+            // Obtener valores
+            Q_ej1 = parseFloat(document.getElementById('caudal_ej1').value);
+            d1_ej1 = parseFloat(document.getElementById('diametro_1').value);
+            d2_ej1 = parseFloat(document.getElementById('diametro_2').value);
+            d3_ej1 = parseFloat(document.getElementById('diametro_3').value);
+
+            // Validar
+            if (isNaN(Q_ej1) || isNaN(d1_ej1) || isNaN(d2_ej1) || isNaN(d3_ej1)) {
+                alert('Por favor, ingresa números válidos en todos los campos');
+                return;
+            }
+
+            // Calcular velocidades
+            const velocidades = velocity();
+
+            // Mostrar alerta
+            alert(`Velocidades: v1 = ${velocidades.v1.toFixed(2)}, v2 = ${velocidades.v2.toFixed(2)}, v3 = ${velocidades.v3.toFixed(2)}`);
+        });
+
+        // Función velocity
+        function velocity() {
+            let v1 = Q_ej1 / ((d1_ej1 ** 2) * Math.PI / 4);
+            let v2 = Q_ej1 / ((d2_ej1 ** 2) * Math.PI / 4);
+            let v3 = Q_ej1 / ((d3_ej1 ** 2) * Math.PI / 4);
+            return { v1, v2, v3 };
+        }
+    </script>
+</body>
+</html>

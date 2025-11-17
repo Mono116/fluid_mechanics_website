@@ -114,9 +114,17 @@
             <!-- Ejercicio 1 -->
             <section class="exercise active" data-index="0" id="ex-0">
                 <h2>Ejercicio 1</h2>
-                <p>Dos tuberías en serie, la primera tiene un caudal Q1 = 5 L/s y la pérdida de carga h1 = 2 m. La segunda tiene pérdida h2 = 3 m. ¿Cuál es la pérdida de carga total h_total?</p>
+                <p>Para el sistema mostrado en la figura fluye agua a <input type="number" id="temperature" placeholder="Insertar T" min="32" max="212" style="width: 90px; height: 20px ;font-size: 16px;"> °F 
+                    por una tuberia de hierro ductil revestida cuyos diametros son <input type="number" id="diametro_1" placeholder="diametro 1" min="3" max="25" style="width: 90px; height: 20px ;font-size: 16px;"> , <input type="number" id="diametro_2" placeholder="diametro 2" min="3" max="25" style="width: 90px; height: 20px ;font-size: 16px;"> y
+                    <input type="number" id="diametro_3" placeholder="diametro 3" min="3" max="25" style="width: 90px; height: 20px ;font-size: 16px;"> pulgadas, con longitud igual a <input type="number" id="longitud_1" placeholder="longitud 1" min="0" style="width: 90px; height: 20px ;font-size: 16px;">,
+                    <input type="number" id="longitud_2" placeholder="longitud 2" min="0" style="width: 90px; height: 20px ;font-size: 16px;">
+                    y <input type="number" id="longitud_3" placeholder="longitud 3" min="0" style="width: 90px; height: 20px ;font-size: 16px;"> pies, respectivamente. se sabe que el caudal es de <input type="number" id="caudal_ej1" placeholder="caudal" style="width: 90px; height: 20px ;font-size: 16px;"> galones por minuto. Determine la diferencia de altura entre los puntos A y B. Las contracciones son súbitas.</p>
+                <img src="d1.png" alt="Image" height="300" width="600">
+                
+
                 <label for="ans-0">Respuesta (m):</label>
                 <input type="text" id="ans-0" placeholder="Escribe la respuesta numérica">
+                <button id="comprobar2" >Comprobar 2</button>
                 <div class="controls">
                     <button class="primary" data-action="check">Comprobar</button>
                     <button class="secondary" data-action="show-solution">Mostrar solución</button>
@@ -163,8 +171,255 @@
             <button id="reset">Reiniciar</button>
         </div>
     </div>
+    <!-- Respuestas-->>
+    
 
-    <script>const problems = [
+    <script>
+    // algunas constantes
+    const temperaturasSI = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+    const p_especificoSI = [9.81, 9.81, 9.81, 9.81, 9.79, 9.78, 9.77, 9.75, 9.73, 9.71, 9.69, 9.67, 9.65, 9.62, 9.59, 9.56, 9.53, 9.50, 9.47, 9.44, 9.40];
+    const densidadSI = [1000, 1000, 1000, 1000, 998, 997, 996, 994, 992, 990, 988, 986, 984, 981, 978, 975, 971, 968, 965, 962, 958];
+    const v_cinematicaSI = [1.75e-6, 1.52e-6, 1.30e-6, 1.15e-6, 1.02e-6, 8.94e-7, 8.03e-7, 7.22e-7, 6.56e-7, 6.00e-7, 5.48e-7, 5.05e-7, 4.67e-7, 4.39e-7, 4.11e-7, 3.83e-7, 3.60e-7, 3.41e-7, 3.22e-7, 3.04e-7, 2.94e-7];
+
+    const temperaturasIN = [32, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 212];
+    const p_especificoIN = [62.4, 62.4, 62.4, 62.4, 62.3, 62.2, 62.1, 62.0, 61.9, 61.7, 61.5, 61.4, 61.2, 61.0, 60.8, 60.6, 60.4, 60.1, 59.8];
+    const densidadIN = [1.94, 1.94, 1.94, 1.94, 1.94, 1.93, 1.93, 1.93, 1.92, 1.92, 1.91, 1.91, 1.90, 1.90, 1.89, 1.88, 1.88, 1.87, 1.86];
+    const v_cinematicaIN = [1.89e-5, 1.67e-5, 1.40e-5, 1.21e-5, 1.05e-5, 9.15e-6, 8.29e-6, 7.37e-6, 6.55e-6, 5.94e-6, 5.49e-6, 5.03e-6, 4.68e-6, 4.38e-6, 4.07e-6, 3.84e-6, 3.62e-6, 3.35e-6, 3.17e-6];
+    const g = 32.17;
+    const rug_HDR_IN = 0.0004
+    // Listas de coeficientes de resistencia agrupados por velocidad en pies/s (D/D₀)
+    const K_contraccion = {
+  "2_pies_s":  [0.00, 0.03, 0.07, 0.17, 0.26, 0.34, 0.38, 0.40, 0.42, 0.44, 0.47, 0.48, 0.49],
+  "4_pies_s":  [0.00, 0.04, 0.07, 0.17, 0.26, 0.34, 0.37, 0.40, 0.42, 0.44, 0.46, 0.47, 0.48],
+  "6_pies_s":  [0.00, 0.04, 0.07, 0.17, 0.26, 0.34, 0.37, 0.39, 0.41, 0.43, 0.45, 0.47, 0.48],
+  "8_pies_s":  [0.00, 0.04, 0.08, 0.18, 0.26, 0.33, 0.36, 0.39, 0.40, 0.42, 0.44, 0.45, 0.47],
+  "10_pies_s": [0.00, 0.05, 0.08, 0.18, 0.26, 0.33, 0.36, 0.38, 0.40, 0.42, 0.45, 0.46, 0.47],
+  "15_pies_s": [0.00, 0.05, 0.08, 0.18, 0.25, 0.32, 0.34, 0.37, 0.38, 0.40, 0.45, 0.45, 0.47],
+  "20_pies_s": [0.00, 0.05, 0.09, 0.18, 0.25, 0.31, 0.33, 0.35, 0.37, 0.39, 0.46, 0.47, 0.47],
+  "30_pies_s": [0.00, 0.06, 0.10, 0.19, 0.25, 0.29, 0.32, 0.33, 0.34, 0.36, 0.46, 0.47, 0.40],
+  "40_pies_s": [0.00, 0.06, 0.11, 0.20, 0.24, 0.27, 0.29, 0.30, 0.31, 0.33, 0.38, 0.40, 0.38]
+};
+    const claves = [
+  "2_pies_s",
+  "4_pies_s",
+  "6_pies_s",
+  "8_pies_s",
+  "10_pies_s",
+  "15_pies_s",
+  "20_pies_s",
+  "30_pies_s",
+  "40_pies_s"
+];
+    const claves_value = [2, 4, 6, 8, 10, 15, 20, 30, 40]
+    const D1_D2 = [1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.5, 3.0, 4.0, 5.0, 10.0];
+    // Desarrollo pregunta 1
+    // Velocidad para cada sección
+// Variables
+// Asegurarse de que el DOM esté cargado
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables
+    let Q_ej1, d1_ej1, d2_ej1, d3_ej1, T, longitud_1, longitud2, longitud3;
+
+    // Seleccionar botón
+    const botonComprobar = document.getElementById('comprobar2');
+    if (!botonComprobar) {
+        console.error('No se encontró el botón con id="comprobar2"');
+        return;
+    }
+
+    // Evento del botón
+    botonComprobar.addEventListener('click', function() {
+        console.log('Botón clicado'); // Para depuración
+
+        // Obtener valores
+        Q_ej1 = parseFloat(document.getElementById('caudal_ej1').value);
+        d1_ej1 = parseFloat(document.getElementById('diametro_1').value);
+        d2_ej1 = parseFloat(document.getElementById('diametro_2').value);
+        d3_ej1 = parseFloat(document.getElementById('diametro_3').value);
+        T = parseFloat(document.getElementById('temperature').value);
+        longitud1 = parseFloat(document.getElementById('longitud_1').value);
+        longitud2 = parseFloat(document.getElementById('longitud_2').value);
+        longitud3 = parseFloat(document.getElementById('longitud_3').value);
+        // Validar
+
+        if (isNaN(Q_ej1) || isNaN(d1_ej1) || isNaN(d2_ej1) || isNaN(d3_ej1) || d1_ej1 <= 0 || d2_ej1 <= 0 || d3_ej1 <= 0 || T < 32 || d1_ej1 < d2_ej1 || d2_ej1 <d3_ej1 ){
+            alert('Por favor, ingresa números válidos, diámetros mayores a 0 , el diametro 1 debese ser mayor al 2 y el 2 mayor al 3 y la temperaturas entre 32 y 212 °F');
+            return;
+        }
+
+        // Calcular velocidades
+        const velocidades = velocity(Q_ej1,d1_ej1,d2_ej1,d3_ej1);
+
+        // Mostrar vis_inf
+        let sub_inferior_temperatura = subindice_inferior(temperaturasIN,T);
+        let sub_superior_temperatura = subindice_superior(temperaturasIN, T);
+        T_inf = temperaturasIN[sub_inferior_temperatura];
+        T_sup = temperaturasIN[sub_superior_temperatura];
+        vis_inf = v_cinematicaIN[sub_inferior_temperatura];
+        vis_sup = v_cinematicaIN[sub_superior_temperatura];
+        
+        // Interpolación para hallar la viscodidad cinemática aproximada
+        let viscosidad_aprox;
+
+        if (T_inf == T_sup){
+            viscosidad_aprox = vis_inf;
+        }
+            else{
+                viscosidad_aprox = vis_inf + ((vis_sup-vis_inf)/(T_sup-T_inf)*(T-T_inf));
+        }
+        
+        // Necesario para las K : d1/d2 y velocidad final
+        let r1 = d1_ej1/d2_ej1;     // razon diametro d1/d2
+        let r2 = d2_ej1/d3_ej1;     // razon diametro d2/d3
+        const velocidad_1 = velocidades.v1;
+        const velocidad_2 = velocidades.v2;
+        const velocidad_3 = velocidades.v3;
+
+        // Cálculo de la primera K
+
+        let sub_inferior_velocidad2 = subindice_inferior(claves_value,velocidad_2 );      // Subindice inferior de velocidad
+        let sub_superior_velocidad2 = subindice_superior(claves_value, velocidad_2);      // Subindice superior de velocidad
+
+        let sub_inferior_rdiametroA = subindice_inferior(D1_D2,r1)                  // Subindice inferior de razon de diametros
+        let sub_superior_rdiametroA = subindice_superior(D1_D2,r1)                 // Subindice superior de razon de diametros
+
+        let K1_inferior_izq = K_contraccion[claves[sub_inferior_velocidad2]][sub_inferior_rdiametroA];        // Definir K inferior lado izquierdo
+        let K1_superior_izq = K_contraccion[claves[sub_superior_velocidad2]][sub_superior_rdiametroA];        // Definir K superior lado izquierdo
+        
+        let K1_inferior_derecho =  K_contraccion[claves[sub_inferior_velocidad2+1]][sub_inferior_rdiametroA]; // Definir K inferior lado derecho
+        let K1_superior_derecho =  K_contraccion[claves[sub_superior_velocidad2+1]][sub_superior_rdiametroA]; // Definir K superior lado derecho
+        // interpolando k1
+
+        let K1_interpolado_inf = interpolacion(claves_value[sub_inferior_velocidad2],K1_inferior_izq,claves_value[sub_inferior_velocidad2 + 1], K1_inferior_derecho, velocidad_2); // Interpolación 1
+        let K1_interpolado_sup = interpolacion(claves_value[sub_superior_velocidad2],K1_superior_izq,claves_value[sub_superior_velocidad2 + 1], K1_superior_derecho, velocidad_2); // Interpoalción 2
+        let k1_final = interpolacion(D1_D2[sub_inferior_rdiametroA],K1_interpolado_inf,D1_D2[sub_superior_rdiametroA], K1_interpolado_sup,r1 )
+
+        // Cálculo de la segunda K
+        let sub_inferior_velocidad3 = subindice_inferior(claves_value,velocidad_3 );      // Subindice inferior de velocidad
+        let sub_superior_velocidad3 = subindice_superior(claves_value, velocidad_3);      // Subindice superior de velocidad
+
+        let sub_inferior_rdiametroB = subindice_inferior(D1_D2,r2)                  // Subindice inferior de razon de diametros
+        let sub_superior_rdiametroB = subindice_superior(D1_D2,r2)                 // Subindice superior de razon de diametros
+
+        let K2_inferior_izq = K_contraccion[claves[sub_inferior_velocidad3]][sub_inferior_rdiametroB];        // Definir K inferior lado izquierdo
+        let K2_superior_izq = K_contraccion[claves[sub_superior_velocidad3]][sub_superior_rdiametroB];        // Definir K superior lado izquierdo
+        
+        let K2_inferior_derecho =  K_contraccion[claves[sub_inferior_velocidad3+1]][sub_inferior_rdiametroB]; // Definir K inferior lado derecho
+        let K2_superior_derecho =  K_contraccion[claves[sub_superior_velocidad3+1]][sub_superior_rdiametroB]; // Definir K superior lado derecho
+        // interpolando k1
+
+        let K2_interpolado_inf = interpolacion(claves_value[sub_inferior_velocidad3],K2_inferior_izq,claves_value[sub_inferior_velocidad3 + 1], K2_inferior_derecho, velocidad_3); // Interpolación 1
+        let K2_interpolado_sup = interpolacion(claves_value[sub_superior_velocidad3],K2_superior_izq,claves_value[sub_superior_velocidad3 + 1], K2_superior_derecho, velocidad_3); // Interpoalción 2
+        let k2_final = interpolacion(D1_D2[sub_inferior_rdiametroB],K2_interpolado_inf,D1_D2[sub_superior_rdiametroB], K2_interpolado_sup,r2 )
+
+        // Hallando Reynolds
+        const Reynolds_seccion1 = velocidad_1 * (d1_ej1/12) / viscosidad_aprox;
+        const Reynolds_seccion2 = velocidad_2 * (d2_ej1/12) / viscosidad_aprox;
+        const Reynolds_seccion3 = velocidad_3 * (d3_ej1/12) / viscosidad_aprox;
+
+        // Hallando factores de fricción
+        const f1 = factorf(d1_ej1, Reynolds_seccion1);
+        const f2 = factorf(d2_ej1, Reynolds_seccion2);
+        const f3 = factorf(d3_ej1, Reynolds_seccion3);
+
+        // Hallando perdidas en tramos rectos
+        const perdida1 = losses(f1, longitud1, velocidad_1, d1_ej1);
+        const perdida2 = losses(f2, longitud2, velocidad_2, d2_ej1);
+        const perdida3 = losses(f3, longitud3, velocidad_3, d3_ej1);
+
+        // Hallando pérdidas debido a contracciones súbitas
+
+        const hc1 = contractionlosses(k1_final, velocidad_2);
+        const hc2 = contractionlosses(k2_final, velocidad_3);
+
+        // Hallando carga de velocidad en B
+        const velocity_head = (velocidad_3**2)/(2*g);
+        
+        // Hallando las diferencias de alturas
+        const Za = perdida1 + perdida2 + perdida3 + velocity_head + hc1 + hc2;
+        // Mostrar alerta
+        alert(`Velocidades: v1 = ${velocidades.v1.toFixed(2)}, v2 = ${velocidades.v2.toFixed(2)}, v3 = ${velocidades.v3.toFixed(2)},viscoidad= ${viscosidad_aprox}
+        ,K1 = ${k1_final}, K2 = ${k2_final}, f1= ${f1},Reynolds 1 = ${Reynolds_seccion1}, Reynolds 2 = ${Reynolds_seccion2}, Reynolds 3 ${Reynolds_seccion3}
+        ,f1 = ${f1},f2 = ${f2},f3 = ${f3}, perdida 1 = ${perdida1}, Perdida 2= ${perdida2}, Perdida 3 = ${perdida3}, Pérdidas por contracción 1 = ${hc1}, Pérdidas por contracción 2 = ${hc2},k1 =${k1_final},k2 = ${k2_final}, Diferencia de alturas = ${Za}`);
+    });
+
+    // Función velocity
+    function velocity(caudal, diametro1, diametro2, diametro3) {
+        let v1 = caudal*0.00222801 / (((diametro1/12) ** 2) * Math.PI / 4);
+        let v2 = caudal*0.00222801 / (((diametro2/12) ** 2) * Math.PI / 4);
+        let v3 = caudal*0.00222801 / (((diametro3/12) ** 2) * Math.PI / 4);
+        return { v1, v2, v3 };
+    }
+    
+    // Función subindice inferior generalizada para cualquier lista y valor
+    function subindice_inferior(lista, valor) {
+
+    // 1. Si valor es menor que el primer elemento
+    if (valor < lista[0]) return 0;
+
+    // 2. Recorrer lista normalmente
+    for (let i = 0; i < lista.length; i++) {
+        if (lista[i] > valor) {
+            return i - 1;
+        }
+        if (lista[i] === valor) {
+            return i;
+        }
+    }
+
+    // 3. Si valor es mayor que TODOS los elementos
+    return lista.length - 1;
+    }
+
+    // Función subindice superior generalizada para cualquier lista y valor
+    function subindice_superior(lista, valor) {
+
+    if (valor <= lista[0]) return 0;
+
+    for (let i = 0; i < lista.length; i++) {
+        if (lista[i] >= valor) {
+            return i;
+        }
+    }
+
+    return lista.length - 1;
+    }
+    // Función de interpolación general
+
+    function interpolacion(x0,y0,x1,y1, x){
+        if (y0 != y1){
+            let y = y0 + ((y1-y0)/(x1-x0))*(x-x0)
+            return y;
+        }
+            else{
+                return y0;
+            }
+    }
+    // función de factor de fricción
+    function factorf(diametro,Reynolds){
+        if (Reynolds < 2000){
+            let f = 64/Reynolds;
+            return f;
+        }
+            else{
+                let f = 0.25/((Math.log10(rug_HDR_IN/(3.7*(diametro/12))+5.74/(Reynolds**0.9)))**2);     // Ecuación de Swamee-Jean
+
+                return f;
+            }
+
+    }
+    // Función pérdidas por tramos rectos
+    function losses(f, L, v, d){
+        let losses = f * (L/(d/12)) * (v**2 / (2*g));       // Ecuación de Darcy- Weisbach
+        return losses;
+    }
+    function contractionlosses(k,v){
+        hc = k* (v**2)/(2*g);
+        return hc;
+    }
+});
+
+    const problems = [
       { answer: 5, solution: 'Suma simple: h_total = h1 + h2 = 2 + 3 = 5 m' },
       { answer: 21.92, solution: 'zA - zB = Σhf + Σhm + (VB² - VA²)/2g = 21.92 ft' },
       { answer: 8, solution: 'h_total = 4 + 4 = 8 m' }
@@ -270,5 +525,6 @@
       const sol = document.getElementById('sol-' + i);
       sol.textContent = '';
     });</script>
+    
 </body>
 </html>
