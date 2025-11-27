@@ -82,8 +82,9 @@
             background: #f1f5f9;
             padding: 10px;
             border-radius: 6px;
-            font-family: monospace
-        }
+            font-family: monospace;
+            white-space: pre-wrap;   /* 👈 ESTA LÍNEA */
+            }
 
         .nav {
             display: flex;
@@ -299,6 +300,7 @@ function contractionlosses(k, v){
     return k*(v**2)/(2*g);
 }
 
+let solucionfinal1 ="";
 /* ---------------------------------------------------------
   FUNCIÓN EJECUTAR EJERCICIO 1
 --------------------------------------------------------- */
@@ -396,17 +398,48 @@ function ejecutarEj1(){
     let hvB = (v3**2)/(2*g);
 
     Za_correct = h1 + h2 + h3 + hvB + hc1 + hc2;
+    
+    solucionfinal1 =`Datos calculados:
+    Teniendo el caudal y el diametro de cada tubería, la velocidad se calcula de la forma
+    v = Q/A
+    Velocidad sección 1 = ${v1} ft/s
+    Velocidad sección 2 = ${v2} ft/s 
+    Velocidad sección 3 = ${v3} ft/s
 
-    alert(`Velocidades:\nv1=${v1.toFixed(2)}\nv2=${v2.toFixed(2)}\nv3=${v3.toFixed(2)}
-Viscosidad=${visc}
-K1=${K1}
-K2=${K2}
-f1=${f1}
-f2=${f2}
-f3=${f3}
-Pérdidas rectas: h1=${h1}, h2=${h2}, h3=${h3}
-Pérdidas menores: hc1=${hc1}, hc2=${hc2}
-Za = ${Za_correct}, si_rA = ${si_rA}, si_rB = ${si_rB}`);
+    Viscocidad cinemática en base a la temperatura:${visc} ft^2 /s
+    Número de Reynolds
+    Re = (vd)/vc                Donde vc es viscocidad cinemática.
+
+    Re 1 = ${Re1}
+    Re 2 = ${Re2}
+    Re 3 = ${Re3}
+
+    La rugosidad para este problema es de: ${rug_HDR_IN} ft
+
+    Factor de fricción calculado con la ecuación de Swamee-Jean
+    f1 =${f1}
+    f2 =${f2}
+    f3 =${f3}
+
+    Pérdidas por en cada sección empleando la ecuación de darcy:
+
+    hl= f (L/d)(v^2 /2g)
+    Pérdida sección 1 = ${h1} ft
+    Pérdida sección 2 = ${h2} ft
+    Pérdida sección 3 = ${h3} ft
+    Constantes K interpoladas de las tablas:
+    K1 = ${K1}
+    K2 = ${K2}
+    Pérdidas por contracciones súbitas:
+    hc1 =${hc1} ft
+    hc2 =${hc2} ft
+    Za - Zb = ${Za_correct} ft
+    `;
+
+    problems[0] = { answer: ()=>Za_correct, solution: solucionfinal1 };
+
+    
+    
 }
 
 /* -------------------------
@@ -418,7 +451,7 @@ Za = ${Za_correct}, si_rA = ${si_rA}, si_rB = ${si_rB}`);
 ------------------------- */
 
 let diaComercial_in = null; // valor a comparar en pulgadas (se actualizará)
-let ultimaSolucionText = ""; // texto detallado de la solución (para mostrar)
+let ultimaSolucionText = ''; // texto detallado de la solución (para mostrar)
 
 function aleatorio(min, max){
     return Math.random()*(max-min)+min;
@@ -498,7 +531,7 @@ Propiedades:
 Iteración Darcy–Colebrook (convergencia en ${iter} iteraciones):
   Diámetro calculado = ${D_ft.toFixed(6)} ft = ${D_in.toFixed(4)} in
   Factor de fricción f ≈ ${f.toFixed(6)}
-  Reynolds aproximado (última iteración) ≈ ${( (4*Q)/(Math.PI*D_ft*nu) ).toExponential(3)}
+  Reynolds aproximado (última iteración) ≈ ${( (4*Q)/(Math.PI   *D_ft*nu) ).toExponential(3)}
 
 Diámetro comercial seleccionado (por exceso) = ${diaComercial_in} in
 `;
@@ -525,7 +558,7 @@ Diámetro comercial seleccionado (por exceso) = ${diaComercial_in} in
    (agregamos placeholder en index 3; se actualizará en ejecutarEj4)
 ------------------------- */
 let problems = [
-    { answer: ()=>Za_correct, solution: "Suma de pérdidas por tramos rectos, por contracciones súbitas y la carga de velocidad en B." },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 1 (aún no generada)." },
     { answer: ()=>21.92,     solution: "zA - zB = 21.92 ft." },
     { answer: ()=>8,         solution: "h_total = 8 m" },
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 4 (aún no generada)." }
@@ -651,6 +684,15 @@ function checkAnswer(i){
 function showSolution(i){
     let sol = document.getElementById("sol-"+i);
     if (!sol) return;
+
+    // Ejercicio 1 usa solucionfinal1
+    if (i === 0){
+        sol.textContent = solucionfinal1;
+        sol.style.display="block";
+        return;
+    }
+
+    // Otros ejercicios (2, 3, 4)
     sol.textContent = problems[i].solution;
     sol.style.display="block";
 }
