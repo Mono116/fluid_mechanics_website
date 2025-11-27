@@ -83,7 +83,7 @@
             padding: 10px;
             border-radius: 6px;
             font-family: monospace;
-            white-space: pre-wrap;   /* 👈 ESTA LÍNEA */
+            white-space: pre-wrap;
             }
 
         .nav {
@@ -147,10 +147,18 @@
             <!-- Ejercicio 2 -->
             <section class="exercise" data-index="1" id="ex-1">
                 <h2>Ejercicio 2</h2>
-                <p>Para el sistema mostrado, fluye agua a 70°F por tres tramos de tubería de hierro dúctil revestida de diámetros 3", 4" y 6", con longitudes 65, 110 y 185 ft, respectivamente. El caudal es 240.8 gal/min.</p>
-                <img src="pag1.jpg" alt="Image" height="200" width="500">
+                <p>Por un sistema de dos tuberías en serie circula agua a velocidad constante de V = 2.5 m/s.
+                    La presión al inicio es P₁ = 300 kPa, el diametro de la primera sección de tubería es de 76.2 mm y el diametro de la segunda sección es  de 50.8 mm. Calcula la presión final.</p>
+                <p><b>Datos:</b><br>
+                    L₁ = 40 m<br>
+                    L₂ = 25 m<br>
+                    f₁ = 0.018<br>
+                    f₂ = 0.020<br>
+                    rho = 1000 kg/m³<br>
+                    g = 9.81 m/s²
+                </p>
 
-                <label for="ans-1">Respuesta (ft):</label>
+                <label for="ans-1">Respuesta (kPa):</label>
                 <input type="text" id="ans-1" placeholder="Escribe la respuesta numérica">
 
                 <div class="controls">
@@ -203,6 +211,38 @@
                 <div class="solution" id="sol-3" style="display:none; white-space: pre-wrap;"></div>
             </section>
 
+
+            <!-- Ejercicio 5 (nuevo) -->
+            <section class="exercise" data-index="4" id="ex-5">
+                <h2>Ejercicio 5: Dos tramos con válvula intermedia</h2>
+                <p>Por un sistema de dos tuberías en serie fluye agua a V = 3.0 m/s.  
+                    Entre los dos tramos hay una válvula con coeficiente K = 5.  
+                    La presión inicial es P₁ = 200 kPa.  
+                    Ingrese D₁ y D₂. Calcular la presión final.
+                </p>
+
+                <p><b>Datos:</b><br>
+                    L₁ = 15 m<br>
+                    L₂ = 25 m<br>
+                    f₁ = 0.022<br>
+                    f₂ = 0.024<br>
+                    K = 5<br>
+                    ρ = 1000 kg/m³<br>
+                    g = 9.81 m/s²
+                </p>
+                <input id="e5D1" type="number" step="0.001" placeholder="D1 (m)">
+                <input id="e5D2" type="number" step="0.001" placeholder="D2 (m)">
+
+                <label for="ans-4">Ingrese su resultado (kPa):</label>
+                <input type="text" id="ans-4" placeholder="Presión (kPa)">
+
+                <div class="controls">
+                    <button class="primary" data-action="check">Comprobar</button>
+                    <button class="secondary" data-action="show-solution">Mostrar solución</button>
+                </div>
+                <div class="feedback" id="fb-4" aria-live="polite"></div>
+                <div class="solution" id="sol-4" style="display:none"></div>
+            </section>
         </div>
 
         <div class="nav">
@@ -229,6 +269,7 @@ const densidadIN = [1.94,1.94,1.94,1.94,1.94,1.93,1.93,1.93,1.92,1.92,1.91,1.91,
 const v_cinematicaIN = [1.89e-5,1.67e-5,1.40e-5,1.21e-5,1.05e-5,9.15e-6,8.29e-6,7.37e-6,6.55e-6,5.94e-6,5.49e-6,5.03e-6,4.68e-6,4.38e-6,4.07e-6,3.84e-6,3.62e-6,3.35e-6,3.17e-6];
 
 const g = 32.17;
+const rho = 1000;
 const rug_HDR_IN = 0.0004;
 
 const K_contraccion = {
@@ -400,48 +441,70 @@ function ejecutarEj1(){
     Za_correct = h1 + h2 + h3 + hvB + hc1 + hc2;
     
     solucionfinal1 =`Datos calculados:
-    Teniendo el caudal y el diametro de cada tubería, la velocidad se calcula de la forma
-    v = Q/A
-    Velocidad sección 1 = ${v1} ft/s
-    Velocidad sección 2 = ${v2} ft/s 
-    Velocidad sección 3 = ${v3} ft/s
+Teniendo el caudal y el diametro de cada tubería, la velocidad se calcula de la forma
+v = Q/A
+Velocidad sección 1 = ${v1} ft/s
+Velocidad sección 2 = ${v2} ft/s 
+Velocidad sección 3 = ${v3} ft/s
 
-    Viscocidad cinemática en base a la temperatura:${visc} ft^2 /s
-    Número de Reynolds
-    Re = (vd)/vc                Donde vc es viscocidad cinemática.
+Viscocidad cinemática en base a la temperatura:${visc} ft^2 /s
+Número de Reynolds
+Re = (vd)/vc                Donde vc es viscocidad cinemática.
 
-    Re 1 = ${Re1}
-    Re 2 = ${Re2}
-    Re 3 = ${Re3}
+Re 1 = ${Re1}
+Re 2 = ${Re2}
+Re 3 = ${Re3}
 
-    La rugosidad para este problema es de: ${rug_HDR_IN} ft
+La rugosidad para este problema es de: ${rug_HDR_IN} ft
 
-    Factor de fricción calculado con la ecuación de Swamee-Jean
-    f1 =${f1}
-    f2 =${f2}
-    f3 =${f3}
+Factor de fricción calculado con la ecuación de Swamee-Jean
+f1 =${f1}
+f2 =${f2}
+f3 =${f3}
 
-    Pérdidas por en cada sección empleando la ecuación de darcy:
+Pérdidas por en cada sección empleando la ecuación de darcy:
 
-    hl= f (L/d)(v^2 /2g)
-    Pérdida sección 1 = ${h1} ft
-    Pérdida sección 2 = ${h2} ft
-    Pérdida sección 3 = ${h3} ft
-    Constantes K interpoladas de las tablas:
-    K1 = ${K1}
-    K2 = ${K2}
-    Pérdidas por contracciones súbitas:
-    hc1 =${hc1} ft
-    hc2 =${hc2} ft
-    Za - Zb = ${Za_correct} ft
-    `;
+hl= f (L/d)(v^2 /2g)
+Pérdida sección 1 = ${h1} ft
+Pérdida sección 2 = ${h2} ft
+Pérdida sección 3 = ${h3} ft
+Constantes K interpoladas de las tablas:
+K1 = ${K1}
+K2 = ${K2}
+Pérdidas por contracciones súbitas:
+hc1 =${hc1} ft
+hc2 =${hc2} ft
+Za - Zb = ${Za_correct} ft
+`;
+    problems[0] = { answer: ()=>Za_correct, solution: solucionfinal1 };  
 
-    problems[0] = { answer: ()=>Za_correct, solution: solucionfinal1 };
-
-    
-    
+    // mostrar solución condensada en sol-1 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-0').textContent = solucionfinal2;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-0').style.display = "none";
 }
 
+// EJECUTAR EJERCICIO 2
+let solucionfinal2 ="";
+function ejecutarEj2(){
+    solucionfinal2=
+`Se calculan las pérdidas en cada tramo con la ecuación de Darcy-Weisbach
+hl= f (L/d)(v^2 /2g)
+Pérdidas tramo 1 = 3.01 m
+Pérdidas tramo 2 = 3.14 m
+Se hallas las pérdidas totales:
+ht = hl1 + hl2
+Se halla el cambio de presion
+ΔP = 1000(9.81)(6.15) ≈ 60300 Pa = 60.3kPa
+P2 =300 - 60.3 = 239.7 kPa
+`;
+    problems[1] = { answer: ()=>239.7, solution: solucionfinal2 };  
+
+    // mostrar solución condensada en sol-1 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-1').textContent = solucionfinal2;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-1').style.display = "none";
+}
 /* -------------------------
    EJERCICIO 4: Darcy + Colebrook (aleatorio)
    - genera Q, dP, L en los rangos pedidos
@@ -552,16 +615,68 @@ Diámetro comercial seleccionado (por exceso) = ${diaComercial_in} in
     // devolver el valor calculado para uso inmediato (si se desea)
     return {D_ft, D_in, diaComercial_in, f, ultimaSolucionText};
 }
+// FUNCIÓN EJECUTAR EJERCICIO 5
+let solucionfinal5 = "";
+function ejecutarEj5(){
+    let D1 = parseFloat(e5D1.value);
+    let D2 = parseFloat(e5D2.value);
+    if(!D1 || !D2) return alert("Ingrese los diámetros");
 
+    let L1=15, L2=25, f1=0.022, f2=0.024, V=3.0, P1=200, K=5;
+
+    let hf1 = f1*(L1/D1)*(V*V/(2*g));
+    let hf2 = f2*(L2/D2)*(V*V/(2*g));
+    let hv = K*(V*V/(2*g));
+    let hf = hf1 + hf2 + hv;
+    let P3 = P1 - (rho*g*hf)/1000;
+
+    solucionfinal5 = `Cálculo paso a paso
+    Pérdida en tramo 1:
+    hf1 = f1 * (L1/D1) * V²/(2g)
+    hf1 = ${f1} * (${L1}/${D1}) * (${V}^2/(2*${g}))
+    hf1 = ${hf1.toFixed(4)} m
+
+    Pérdida en tramo 2:
+    hf2 = f2 * (L2/D2) * V²/(2g)
+    hf2 = ${f2} * (${L2}/${D2}) * (${V}^2/(2*${g}))
+    hf2 = ${hf2.toFixed(4)} m
+
+    Pérdida en la válvula:
+    hv = K * V²/(2g)
+    hv = ${K} * (${V}^2/(2*${g}))
+    hv = ${hv.toFixed(4)} m
+
+    Pérdida total:
+    hf = hf1 + hf2 + hv = ${hf.toFixed(4)} m
+
+    Presión final:
+    P3 = P1 − ρ g hf
+    P3 = ${P3.toFixed(2)} kPa`;
+
+    // Actualizar objeto problems[4] para que checkAnswer lo use
+    if (problems.length < 5){
+        problems[4] = { answer: ()=>P3, solution: solucionfinal5 };
+    } else {
+        problems[4].answer = ()=>P3;
+        problems[4].solution = solucionfinal5;
+    }
+
+    // mostrar solución condensada en sol-3 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-3').textContent = ultimaSolucionText;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-3').style.display = "none";
+
+    }
 /* -------------------------
    PROBLEMAS Y CHECKEO
    (agregamos placeholder en index 3; se actualizará en ejecutarEj4)
 ------------------------- */
 let problems = [
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 1 (aún no generada)." },
-    { answer: ()=>21.92,     solution: "zA - zB = 21.92 ft." },
-    { answer: ()=>8,         solution: "h_total = 8 m" },
-    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 4 (aún no generada)." }
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 2 (aún no generada)." },
+    { answer: ()=>8,         solution: "h_total = hl1 + hl2 = 8 m" },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 4 (aún no generada)." },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 5 (aún no generada)." }
 ];
 
 /* -------------------------
@@ -608,12 +723,22 @@ document.getElementById("exercises").addEventListener("click", e=>{
         // permitir que luego checkAnswer(0) sea llamado más abajo
     }
 
+     // si es el ejercicio 1 y pulsaron Comprobar, ejecuta su cálculo especial
+    if (idx === 1 && action === "check") {
+        ejecutarEj2();  // botón azul del Ej2
+        // permitir que luego checkAnswer(0) sea llamado más abajo
+    }
+
     // si es el ejercicio 3 y pulsaron Comprobar, primero generamos/ejecutamos y actualizamos la respuesta correcta
     if (idx === 3 && action === "check") {
         ejecutarEj4();
         // ahora problems[3] fue actualizado con la solución comercial
     }
-
+    // si es el ejercicio 4 y pulsaron Comprobar, primero generamos/ejecutamos y actualizamos la respuesta correcta
+    if (idx === 4 && action === "check") {
+        ejecutarEj5();
+        // ahora problems[4] fue actualizado con la solución comercial
+    }
     // ahora el comportamiento general
     if (action === "check") checkAnswer(idx);
     if (action === "show-solution") showSolution(idx);
@@ -676,7 +801,7 @@ function checkAnswer(i){
     } else {
         fb.textContent="Incorrecto ✘";
         fb.className="feedback error";
-        sol.textContent = `Solución (valor comercial): ${correct.toFixed(3)} in\n\n${problems[i].solution}`;
+        sol.textContent = `Solución (valor): ${correct.toFixed(3)} \n\n${problems[i].solution}`;
         sol.style.display="block";
     }
 }
@@ -684,15 +809,6 @@ function checkAnswer(i){
 function showSolution(i){
     let sol = document.getElementById("sol-"+i);
     if (!sol) return;
-
-    // Ejercicio 1 usa solucionfinal1
-    if (i === 0){
-        sol.textContent = solucionfinal1;
-        sol.style.display="block";
-        return;
-    }
-
-    // Otros ejercicios (2, 3, 4)
     sol.textContent = problems[i].solution;
     sol.style.display="block";
 }
