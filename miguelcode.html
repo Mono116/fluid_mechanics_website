@@ -106,8 +106,32 @@
             }
     </style>
 </head>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCyushdUDl0mIBxCl50mkbRpz-FfZyqU4",
+    authDomain: "fluidmechanicsproject.firebaseapp.com",
+    projectId: "fluidmechanicsproject",
+    storageBucket: "fluidmechanicsproject.firebasestorage.app",
+    messagingSenderId: "969525156162",
+    appId: "1:969525156162:web:bae9cceaf79e88ac8d50db"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  export const db = getFirestore(app);
+</script>
+
 <body>
+<label><b>Nombre del estudiante:</b></label>
+<input type="text" id="nombre_estudiante" placeholder="Escribe tu nombre" 
+       style="width: 250px; margin-bottom: 20px; padding: 6px;">
+
     <div class="container">
+        <label>Nombre del estudiante:</label>
+        <input type="text" id="nombre_estudiante" placeholder="Escribe tu nombre" style="width: 200px; margin-bottom: 15px;">
+
         <h1>Ejercicios: Tuberías en Serie</h1>
         <p>Responde las preguntas en los cuadros de texto. Si tu respuesta es correcta, verás la retroalimentación con el proceso completo.</p>
 
@@ -798,8 +822,35 @@ function checkAnswer(i){
         fb.textContent="Correcto ✔";
         fb.className="feedback success";
         sol.style.display="none";
+
+        // ---------------------------
+        // 🔵 REGISTRAR RESPUESTA EN FIREBASE
+        // ---------------------------
+        (async () => {
+            try {
+                const nombre = document.getElementById("nombre_estudiante").value || "Sin nombre";
+                const primerIntento = !input.dataset.fallado;  // si nunca falló antes
+
+                await addDoc(collection(db, "respuestas"), {
+                    nombre: nombre,
+                    ejercicio: i,
+                    respuestaIngresada: val,
+                    correcta: true,
+                    primerIntento: primerIntento,
+                    fecha: new Date().toISOString()
+                });
+
+                console.log("Guardado en Firestore");
+            } catch (err) {
+                console.error("Error al guardar:", err);
+            }
+        })();
+
+        fb.className="feedback success";
+        sol.style.display="none";
     } else {
         fb.textContent="Incorrecto ✘";
+        input.dataset.fallado = "1"; // ya no contará como primer intento
         fb.className="feedback error";
         sol.textContent = `Solución (valor): ${correct.toFixed(3)} \n\n${problems[i].solution}`;
         sol.style.display="block";
