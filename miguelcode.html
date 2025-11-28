@@ -273,8 +273,7 @@
   window.db = getFirestore(app);
   window.addDoc = addDoc;
   window.collection = collection;
-</script>
-<script type="module">
+
 /* -------------------------
    TODAS las CONSTANTES
 ------------------------- */
@@ -783,6 +782,7 @@ document.getElementById("nuevo-4").addEventListener("click", function(){
 function normalizeNumberInput(v){
     return Number(String(v).trim().replace(",","."));
 }
+
 
 function checkAnswer(i){
     let input = document.getElementById("ans-"+i);
