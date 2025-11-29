@@ -244,7 +244,7 @@
 
 
             <!-- Ejercicio 5 (nuevo) -->
-            <section class="exercise" data-index="4" id="ex-5">
+            <section class="exercise" data-index="4" id="ex-4">
                 <h2>Ejercicio 5: Dos tramos con válvula intermedia</h2>
                 <p>Por un sistema de dos tuberías en serie fluye agua a V = 3.0 m/s.  
                     Entre los dos tramos hay una válvula con coeficiente K = 5.  
@@ -273,7 +273,48 @@
                 </div>
                 <div class="feedback" id="fb-4" aria-live="polite"></div>
                 <div class="solution" id="sol-4" style="display:none"></div>
-            </section>
+            </section >
+            <!-- Ejercicio 6 (nuevo) -->
+             <section class="exercise" data-index="5" id="ex-5"> 
+                <h2 >Selección del diámetro</h2>
+                <p >
+                    Para un sistemade tubería horizontal se requiere definir su diámetro
+                    si la caída máxima de presión entre dos puntos separados 2000ft es de
+                    8psi. El flujo volumétrico requerido en el sistema es de 2.5 ft3/s.
+                    La tubería debe ser de cobre tipo K.El fluido es agua a 150°F
+                </p>
+
+                <label for="ans-5">Ingrese su resultado (in):</label>
+                <input type="text" id="ans-5" placeholder="Diámetro (in)">
+
+                <div class="controls">
+                    <button class="primary" data-action="check">Comprobar</button>
+                    <button class="secondary" data-action="show-solution">Mostrar solución</button>
+                </div>
+                <div class="feedback" id="fb-5" aria-live="polite"></div>
+                <div class="solution" id="sol-5" style="display:none"></div>
+             </section>
+
+             <!-- Ejercicio 7 (nuevo) -->
+             <section class="exercise" data-index="6" id="ex-6"> 
+                <h2 >Calcular presión inicial</h2>
+                <p >
+                    En un sistema de tuberías horizontales en serie, la presión final en el punto de salida es de 
+                    12 psi.  
+                    La pérdida total de presión por fricción y accesorios es de 6.5 psi.  
+                    Calcule la presión inicial.
+                </p>
+
+                <label for="ans-6">Ingrese su resultado (in):</label>
+                <input type="text" id="ans-6" placeholder="Diámetro (psi)">
+
+                <div class="controls">
+                    <button class="primary" data-action="check">Comprobar</button>
+                    <button class="secondary" data-action="show-solution">Mostrar solución</button>
+                </div>
+                <div class="feedback" id="fb-6" aria-live="polite"></div>
+                <div class="solution" id="sol-6" style="display:none"></div>
+             </section>
         </div>
 
         <div class="nav">
@@ -685,12 +726,9 @@ function ejecutarEj5(){
     P3 = ${P3.toFixed(2)} kPa`;
 
     // Actualizar objeto problems[4] para que checkAnswer lo use
-    if (problems.length < 5){
-        problems[4] = { answer: ()=>P3, solution: solucionfinal5 };
-    } else {
-        problems[4].answer = ()=>P3;
-        problems[4].solution = solucionfinal5;
-    }
+    
+    problems[4] = { answer: ()=>P3, solution: solucionfinal5 };
+  
 
     // mostrar solución condensada en sol-3 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
     document.getElementById('sol-3').textContent = ultimaSolucionText;
@@ -698,6 +736,51 @@ function ejecutarEj5(){
     document.getElementById('sol-3').style.display = "none";
 
     }
+//FUNCIÓN EJERCICIO 6
+let solucionfinal6 ="";
+function ejecutarEj6(){
+    let answer = 0.375;
+    solucionfinal6 = `
+     1. Se conoce la caída máxima permitida:
+        ΔPmáx = 8 psi
+
+    2. Para el caudal dado (2.5 ft³/s) y las características del tubo de cobre Tipo K,
+        se evalúan los diámetros comerciales disponibles.
+
+    3. Al analizar las pérdidas y el comportamiento hidráulico, se determina que<br>
+           el único diámetro que satisface la condición de ≤ 8 psi es:
+
+           d = 3/8 in =0.375 in
+
+    4. Por lo tanto, 0.375 in es el diámetro seleccionado para cumplir la restricción de presión.`;
+    // Actualizar objeto problems[4] para que checkAnswer lo use
+    problems[5] = { answer: ()=>answer, solution: solucionfinal6 };
+    
+
+    // mostrar solución condensada en sol-5 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-5').textContent = ultimaSolucionText;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-5').style.display = "none";
+}
+// FUNCIÓN EJERCICIO 7
+let solucionfinal7 ="";
+function ejecutarEj7(){
+    answer = 18.5;
+    solucionfinal7 = `
+    Pérdida de presión = 6.5 psi
+    Presión Final = 12 psi
+    
+    P1 = P2 + Pérdida de presión
+    P1 = 12 psi + 6.5 psi = 18.5 psi
+    `;
+    // Actualizar objeto problems[4] para que checkAnswer lo use
+    problems[6] = { answer: ()=>answer, solution: solucionfinal7 };
+    
+     // mostrar solución condensada en sol-6 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-6').textContent = ultimaSolucionText;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-6').style.display = "none";
+}
 /* -------------------------
    PROBLEMAS Y CHECKEO
    (agregamos placeholder en index 3; se actualizará en ejecutarEj4)
@@ -707,7 +790,9 @@ let problems = [
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 2 (aún no generada)." },
     { answer: ()=>8,         solution: "h_total = hl1 + hl2 = 8 m" },
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 4 (aún no generada)." },
-    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 5 (aún no generada)." }
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 5 (aún no generada)." },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 6 (aún no generada)." },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 7 (aún no generada)." }
 ];
 
 /* -------------------------
@@ -763,13 +848,23 @@ document.getElementById("exercises").addEventListener("click", e=>{
     // si es el ejercicio 3 y pulsaron Comprobar, primero generamos/ejecutamos y actualizamos la respuesta correcta
     if (idx === 3 && action === "check") {
         ejecutarEj4();
-        // ahora problems[3] fue actualizado con la solución comercial
+        // ahora problems[3] fue actualizado con la solución 
     }
     // si es el ejercicio 4 y pulsaron Comprobar, primero generamos/ejecutamos y actualizamos la respuesta correcta
     if (idx === 4 && action === "check") {
         ejecutarEj5();
-        // ahora problems[4] fue actualizado con la solución comercial
+        // ahora problems[4] fue actualizado con la solución 
     }
+    // si es el ejercicio 5 y pulsaron Comprobar, primero generamos/ejecutamos y actualizamos la respuesta correcta
+    if (idx === 5 && action === "check") {
+        ejecutarEj6();
+        // ahora problems[5] fue actualizado con la solución 
+    }
+    if (idx === 6 && action === "check") {
+        ejecutarEj7();
+        // ahora problems[6] fue actualizado con la solución 
+    }
+    
     // ahora el comportamiento general
     if (action === "check") checkAnswer(idx);
     if (action === "show-solution") showSolution(idx);
