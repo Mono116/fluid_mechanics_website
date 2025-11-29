@@ -407,6 +407,18 @@
             <button id="reset">Reiniciar</button>
         </div>
 
+        <!-- Pantalla de Retroalimentación Final -->
+        <div id="final-feedback" style="display:none; text-align: center; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; margin-top: 20px;">
+            <h2 style="font-size: 32px; margin-bottom: 20px;">¡Examen Completado!</h2>
+            <div id="score-display" style="font-size: 24px; margin-bottom: 30px;">
+                <p>Respuestas Correctas: <span id="correct-count" style="font-weight: bold; color: #4ade80;">0</span></p>
+                <p>Respuestas Incorrectas: <span id="incorrect-count" style="font-weight: bold; color: #f87171;">0</span></p>
+                <p style="font-size: 28px; margin-top: 20px;">Porcentaje: <span id="percentage-display" style="font-weight: bold; font-size: 36px;">0%</span></p>
+            </div>
+            <div id="final-message" style="font-size: 20px; margin-bottom: 20px; font-style: italic;"></div>
+            <button onclick="location.reload()" style="padding: 12px 24px; background-color: white; color: #667eea; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;">Reintentar Examen</button>
+        </div>
+
     </div>
 
     <script>
@@ -1089,6 +1101,13 @@ function ejecutarEj10(){
 
 }
 /* -------------------------
+   CONTADOR DE RESPUESTAS CORRECTAS E INCORRECTAS
+------------------------- */
+let correctAnswers = 0;
+let incorrectAnswers = 0;
+const totalExercises = 10;
+
+/* -------------------------
    PROBLEMAS Y CHECKEO
    (agregamos placeholder en index 3; se actualizará en ejecutarEj4)
 ------------------------- */
@@ -1246,6 +1265,13 @@ function checkAnswer(i){
         fb.className="feedback success";
         sol.style.display="none";
 
+        // CONTAR RESPUESTA CORRECTA (solo si es la primera vez)
+        if (!input.dataset.isCorrect) {
+            input.dataset.isCorrect = "1";
+            correctAnswers++;
+            checkIfAllAnswered();
+        }
+
         // ---------------------------
         // 🔵 REGISTRAR RESPUESTA EN FIREBASE
         // ---------------------------
@@ -1276,6 +1302,13 @@ function checkAnswer(i){
         input.dataset.fallado = "1";
         fb.className="feedback error";
 
+        // CONTAR RESPUESTA INCORRECTA (solo si aún no era incorrecta)
+        if (!input.dataset.isIncorrect) {
+            input.dataset.isIncorrect = "1";
+            incorrectAnswers++;
+            checkIfAllAnswered();
+        }
+
         // *** CAMBIO CLAVE 1: USAR innerHTML ***
         // Nota: Asegúrate de que problems[i].solution ya contenga el string LaTeX que creamos.
         sol.innerHTML = `<b>Solución (valor):</b> ${correct.toFixed(3)} <br><br> ${problems[i].solution}`;
@@ -1287,6 +1320,40 @@ function checkAnswer(i){
             MathJax.typesetPromise([sol]);
         }
     }
+}
+
+function checkIfAllAnswered() {
+    const totalAnswered = correctAnswers + incorrectAnswers;
+    if (totalAnswered === totalExercises) {
+        showFinalFeedback();
+    }
+}
+
+function showFinalFeedback() {
+    // Calcular porcentaje
+    const percentage = Math.round((correctAnswers / totalExercises) * 100);
+    
+    // Mostrar números
+    document.getElementById('correct-count').textContent = correctAnswers;
+    document.getElementById('incorrect-count').textContent = incorrectAnswers;
+    document.getElementById('percentage-display').textContent = percentage + '%';
+    
+    // Mensaje basado en desempeño
+    let message = "";
+    if (percentage >= 60) {
+        message = "¡Lo hiciste muy bien, sigue así!";
+    } else {
+        message = "¡Uy! Sigue intentando, si quieres mejorar ¡Tu puedes!";
+    }
+    document.getElementById('final-message').textContent = message;
+    
+    // Mostrar pantalla final
+    document.getElementById('final-feedback').style.display = 'block';
+    
+    // Desplazar al final de la página
+    setTimeout(() => {
+        document.getElementById('final-feedback').scrollIntoView({ behavior: 'smooth' });
+    }, 500);
 } // Fin de checkAnswer 
 function showSolution(i){
     let sol = document.getElementById("sol-"+i);
@@ -1309,3 +1376,4 @@ ejecutarEj4();
     </script>
 </body>
 </html>
+   
