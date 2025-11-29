@@ -163,9 +163,9 @@
                     <input type="number" id="longitud_3" placeholder="longitud 3" min="0" style="width: 90px; height: 20px ;font-size: 16px;"> pies, respectivamente.
                     Se sabe que el caudal es de <input type="number" id="caudal_ej1" placeholder="caudal" style="width: 90px; height: 20px ;font-size: 16px;"> gal/min. Determine la diferencia de altura entre los puntos A y B. Las contracciones son súbitas.
                 </p>
-
+                <div style="text-align: center;">
                 <img src="d1.png" alt="Image" height="300" width="600">
-
+                </div>
                 <label for="ans-0">Respuesta (ft):</label>
                 <input type="text" id="ans-0" placeholder="Escribe la respuesta numérica">
 
@@ -353,6 +353,50 @@
                 </div>
                 <div class="feedback" id="fb-7" aria-live="polite"></div>
                 <div class="solution" id="sol-7" style="display:none"></div>
+             </section>
+
+             <!-- Ejercicio 9 (nuevo) -->
+             <section class="exercise" data-index="8" id="ex-8"> 
+                <h2 >Ejercicio 9: </h2>
+                <p >
+                 Por medio del sistema mostrado en la figura se bombea
+                    un fluido con densidad relativa igual a 1.29 y viscosidad
+                    cinemática de 8.5×10⁻⁵ ft²/s. Las tuberías son de hierro dúctil
+                    recubierto de 3 y 4 pulgadas. El flujo volumétrico es de 0.56 ft³/s.
+                    Las válvulas a la entrada y salida de la bomba son de globo.
+                    La longitud de la tubería de succión es de 5.3 ft y la de la tubería de descarga es de 176 ft. 
+                    La diferencia de altura entre el nivel del fluido en el tanque y la salida del fluido del sistema es de 76 ft.
+                    Si la bomba tiene un rendimiento del 74%, determine la potencia de entrada a la bomba.
+                </p>
+                <div style="text-align: center;">
+                <img src="ej8.jpg" alt="Image" height="363" width="447">
+                </div>
+                <label for="ans-8">Ingrese su resultado (W):</label>
+                <input type="text" id="ans-8" placeholder="Potencia (W)">
+
+                <div class="controls">
+                    <button class="primary" data-action="check">Comprobar</button>
+                    <button class="secondary" data-action="show-solution">Mostrar solución</button>
+                </div>
+                <div class="feedback" id="fb-8" aria-live="polite"></div>
+                <div class="solution" id="sol-8" style="display:none"></div>
+             </section>
+             <!-- Ejercicio 10 (nuevo) -->
+             <section class="exercise" data-index="9" id="ex-9"> 
+                <h2 >Ejercicio 10: </h2>
+                <p >
+                    ¿Cuál es el tamaño nominal de una tubería de acero-schedule 40,
+                     si su diámetro externo es de 0.840 y su diámetro interno es 21.3?
+                </p>
+                <label for="ans-9">Ingrese su resultado (in):</label>
+                <input type="text" id="ans-9" placeholder="pulgadas(in)">
+
+                <div class="controls">
+                    <button class="primary" data-action="check">Comprobar</button>
+                    <button class="secondary" data-action="show-solution">Mostrar solución</button>
+                </div>
+                <div class="feedback" id="fb-9" aria-live="polite"></div>
+                <div class="solution" id="sol-9" style="display:none"></div>
              </section>
         </div>
 
@@ -1000,6 +1044,50 @@ $$ P_2 = 250 \\text{ kPa} - 115.405 \\text{ kPa} \\approx 134.595 \\text{ kPa} \
     // no forzar display:block aquí para no tapar el input
     document.getElementById('sol-7').style.display = "none";
 }
+
+let solucionfinal9 ="";
+function ejecutarEj9(){
+    let answer = 7077.3127;
+    solucionfinal9 = `
+Para la resolución del ejercicio partimos desde la ecuación de la energía, tomando un nivel de referencia desde el nivel de la tubería de succión. De esta forma, podemos despejar la carga generada por la bomba, componente fundamental para determinar la potencia de la bomba:
+Carga de la Bomba = Diferencia de altura   +  Pérdidas   +   (Velocidad de descarga) ^2 / 2
+
+Las pérdidas estarán presentes a los tramos rectos y a los accesorios, es decir, al codo de 90° estándar y a las 2 válvulas de globo.
+Al realizar el calculo las perdidas dan -->
+Perdidas = 38.7079 ft
+
+Luego se reemplaza en la ecuación -->
+Carga de la Bomba = 116.0552
+
+Por ende => 
+•	La potencia efectiva de la bomba = 5237.2114
+•	La potencia en el eje de la bomba = 7077.3127
+`; 
+
+    // Actualizar objeto problems[8] para que checkAnswer lo use
+    problems[8] = { answer: ()=>answer, solution: solucionfinal9 };
+    
+     // mostrar solución condensada en sol-8 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-8').textContent = solucionfinal9;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-8').style.display = "none";
+
+}
+// EJERCICIO 10
+solucionfinal10 ="";
+function ejecutarEj10(){
+    let answer = 0.5 ;
+    solucionfinal10 = "Buscar en tablas";
+
+     // Actualizar objeto problems[9] para que checkAnswer lo use
+    problems[9] = { answer: ()=>answer, solution: solucionfinal10 };
+    
+     // mostrar solución condensada en sol-9 (oculta por defecto; sólo se muestra cuando hay error o Show solution)
+    document.getElementById('sol-9').textContent = solucionfinal10;
+    // no forzar display:block aquí para no tapar el input
+    document.getElementById('sol-9').style.display = "none";
+
+}
 /* -------------------------
    PROBLEMAS Y CHECKEO
    (agregamos placeholder en index 3; se actualizará en ejecutarEj4)
@@ -1011,6 +1099,8 @@ let problems = [
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 4 (aún no generada)." },
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 5 (aún no generada)." },
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 6 (aún no generada)." },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 7 (aún no generada)." },
+    { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 7 (aún no generada)." },
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 7 (aún no generada)." },
     { answer: ()=>{ return null; }, solution: "Solución del Ejercicio 7 (aún no generada)." }
 ];
@@ -1086,9 +1176,16 @@ document.getElementById("exercises").addEventListener("click", e=>{
     }
     if (idx === 7 && action === "check") {
         ejecutarEj8();
-        // ahora pr oblems[6] fue actualizado con la solución 
+        // ahora pr oblems[7] fue actualizado con la solución 
     }
-
+    if (idx === 8 && action === "check") {
+        ejecutarEj9();
+        // ahora pr oblems[8] fue actualizado con la solución 
+    }
+    if (idx === 9 && action === "check") {
+        ejecutarEj10();
+        // ahora pr oblems[9] fue actualizado con la solución 
+    }
     // ahora el comportamiento general
     if (action === "check") checkAnswer(idx);
     if (action === "show-solution") showSolution(idx);
